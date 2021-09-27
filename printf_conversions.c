@@ -6,35 +6,61 @@
 /*   By: dsanchez <dsanchez@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 18:35:43 by dsanchez          #+#    #+#             */
-/*   Updated: 2021/09/26 21:11:45 by dsanchez         ###   ########.fr       */
+/*   Updated: 2021/09/27 21:31:48 by dsanchez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "printf.h"
+#include "ft_printf.h"
 #include <stdio.h>
 
-int	ft_putchar(char c)
+int	ft_putchar(char c, t_flags *flags)
 {
-	return (write(1, &c, 1));
+	int	n;
+
+	n = 0;
+	while (flags->width > 1 && !flags->just_left)
+	{
+		n += write(1, " ", 1);
+		flags->width--;
+	}
+	if (flags->width > 0 || flags->width == -1)
+	{
+		n += write(1, &c, 1);
+		flags->width--;
+	}
+	while (flags->width > 0)
+	{
+		n += write(1, " ", 1);
+		flags->width--;
+	}
+	return (n);
 }
 
 int	ft_putstr(char *str, t_flags *flags)
 {
-	size_t	i;
-	int		c;
-	int		s;
+	int	i;
+	int	n;
+	int	l;
 
 	i = 0;
-	s = 0;
-	c = 0;
-	if (flags->width > ft_strlen(str))
-		s = flags->width - ft_strlen(str);
-	while (s > c)
+	n = 0;
+	l = (int)ft_strlen(str);
+	printf("hola");
+	if (!str)
+		return (write(1, "(null)", 6));
+	if (flags->width == 0)
+		return (0);
+	while (flags->width > l && !flags->just_left)
 	{
-		write(1, " ", 1);
-		c++;
+		n += write(1, " ", 1);
+		flags->width--;
 	}
-	while (str[i] && i < c)
-		i += write(1, &str[i], 1);
-	return (i);
+	while (str[i] && (flags->width == -1 || flags->width > i))
+		n += write(1, &str[i++], 1);
+	while (flags->width > (int)l && flags->just_left )
+	{
+		n += write(1, " ", 1);
+		flags->width--;
+	}
+	return (n);
 }

@@ -6,12 +6,12 @@
 /*   By: dsanchez <dsanchez@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 19:09:42 by dsanchez          #+#    #+#             */
-/*   Updated: 2021/09/26 21:08:34 by dsanchez         ###   ########.fr       */
+/*   Updated: 2021/09/27 21:41:49 by dsanchez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include "printf.h"
+#include "ft_printf.h"
 #include <stdio.h>
 
 
@@ -20,7 +20,7 @@ int	conversion_format(const char *format, va_list a_list, t_flags *flags)
 	int	i;
 
 	if (*format == 'c')
-		i = ft_putchar(va_arg(a_list, int));
+		i = ft_putchar(va_arg(a_list, int), flags);
 	else if (*format == 's')
 		i = ft_putstr(va_arg(a_list, char*), flags);
 	else
@@ -33,6 +33,8 @@ int	num_len(int n)
 	int	c;
 
 	c = 0;
+	if (n == 0)
+		return (1);
 	while (n > 0)
 	{
 		n /= 10;
@@ -46,20 +48,33 @@ int	get_flags(const char *format, t_flags *flags)
 	int	i;
 
 	i = 0;
-	while (!ft_strnstr("cs", &format[i], 2))
+	while (!ft_strchr("cs", format[i]))
 	{
+		printf("\nc : %c\n", format[i]);
 		if (format[i] == '-')
 		{
 			flags->just_left = 1;
 			i++;
 		}
-		if (ft_atoi(&format[i]))
+		if (ft_atoi(&format[i]) >= 0)
 		{
 			flags->width = ft_atoi(&format[i]);
 			i += num_len(flags->width);
 		}
+		if (format[i] == '.')
+		{
+			flags->prec = ft_atoi(&format[++i]);
+			i += num_len(flags->prec);
+		}
 	}
 	return (i);
+}
+
+void	init_flags(t_flags *flags)
+{
+	flags->width = -1;
+	flags->prec = -1;
+	flags->just_left = 0;
 }
 
 int ft_printf(const char *format, ...)
@@ -79,24 +94,18 @@ int ft_printf(const char *format, ...)
 	{
 		if (format[i] == '%')
 		{
+			init_flags(flags);
+			printf("i : %d", i);
 			i += get_flags(&format[i + 1], flags);
+			printf("i : %d", i);
 			c += conversion_format(&format[i + 1], a_list, flags);
 			i++;
 		}else
-			write(1, &format[i], 1);
+			c += write(1, &format[i], 1);
 		i++;
 	}
+	free(flags);
 	va_end(a_list);
 	return (c);
 }
 
-int	main()
-{
-	//char	*p = "hola";
-
-	//printf("hola %12s %3253172s", "M");
-	//ft_printf("Hola %c%c%c%c%c\n", 'M', 'u', 'n', 'd', 'o');
-	ft_printf("Hola %13s\n", "Mundo");
-	ft_printf("Hola %3s\n", "Mundo");
-	return (0);
-}
