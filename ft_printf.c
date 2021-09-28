@@ -6,7 +6,7 @@
 /*   By: dsanchez <dsanchez@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 19:09:42 by dsanchez          #+#    #+#             */
-/*   Updated: 2021/09/28 21:32:00 by dsanchez         ###   ########.fr       */
+/*   Updated: 2021/09/28 21:55:10 by dsanchez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	conversion_format(const char *format, va_list a_list, t_flags *flags)
 	else if (*format == 'd' || *format == 'i')
 		i = ft_putnbr(va_arg(a_list, int), flags);
 	else if (*format == 'p')
-		i = ft_putnbr_p(va_arg(a_list, int), flags);
+		i = ft_putnbr_p(va_arg(a_list, void*), flags);
 	else if (*format == 'x')
 		i = ft_putnbr_x(va_arg(a_list, int), flags);
 	else if (*format == 'X')
