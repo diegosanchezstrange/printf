@@ -6,7 +6,7 @@
 /*   By: dsanchez <dsanchez@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 19:09:42 by dsanchez          #+#    #+#             */
-/*   Updated: 2021/09/28 20:11:11 by dsanchez         ###   ########.fr       */
+/*   Updated: 2021/09/28 21:32:00 by dsanchez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,14 @@ int	conversion_format(const char *format, va_list a_list, t_flags *flags)
 		i = ft_putstr(va_arg(a_list, char*), flags);
 	else if (*format == 'd' || *format == 'i')
 		i = ft_putnbr(va_arg(a_list, int), flags);
+	else if (*format == 'p')
+		i = ft_putnbr_p(va_arg(a_list, int), flags);
+	else if (*format == 'x')
+		i = ft_putnbr_x(va_arg(a_list, int), flags);
+	else if (*format == 'X')
+		i = ft_putnbr_X(va_arg(a_list, int), flags);
+	else if (*format == '%')
+		i = write(1, "%", 1);
 	else
 		i = 0;
 	return (i);
@@ -49,7 +57,7 @@ int	get_flags(const char *format, t_flags *flags)
 	int	i;
 
 	i = 0;
-	while (!ft_strchr("csdi", format[i]))
+	while (!ft_strchr("csdipxX%", format[i]))
 	{
 		if (format[i] == '-')
 		{

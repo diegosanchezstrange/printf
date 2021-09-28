@@ -8,7 +8,8 @@ CFLAGSR	= -Wall -Werror -Wextra -g3 -fsanitize=address
 
 SRCS	= ft_printf.c \
 			ft_printf_string.c \
-			ft_printf_num.c 
+			ft_printf_num.c \
+			ft_printf_hex.c 
 
 OBJS	= ${SRCS:.c=.o}
 
