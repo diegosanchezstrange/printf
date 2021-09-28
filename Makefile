@@ -4,8 +4,11 @@ CC		= gcc
 
 CFLAGS	= -Wall -Werror -Wextra -c
 
+CFLAGSR	= -Wall -Werror -Wextra -g3 -fsanitize=address
+
 SRCS	= ft_printf.c \
-			printf_conversions.c
+			ft_printf_string.c \
+			ft_printf_num.c 
 
 OBJS	= ${SRCS:.c=.o}
 
@@ -21,11 +24,17 @@ $(NAME) : ${OBJS}
 	@cp libft/libft.a ./${NAME}
 	@ar rc ${NAME} ${OBJS}
 
+run: 
+	@cd libft && make bonus
+	${CC} ${CFLAGSR} ${SRCS} main.c -lft -Llibft -o printf && ./printf
+
 clean:
 		@${RM} ${OBJS} ${OBJS_B}
 
 fclean:		clean
 		@${RM} ${NAME}
+
+bonus: all
 
 re:		fclean all
 

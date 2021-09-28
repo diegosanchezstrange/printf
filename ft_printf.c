@@ -6,14 +6,13 @@
 /*   By: dsanchez <dsanchez@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 19:09:42 by dsanchez          #+#    #+#             */
-/*   Updated: 2021/09/27 21:41:49 by dsanchez         ###   ########.fr       */
+/*   Updated: 2021/09/28 20:11:11 by dsanchez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include "ft_printf.h"
 #include <stdio.h>
-
 
 int	conversion_format(const char *format, va_list a_list, t_flags *flags)
 {
@@ -23,6 +22,8 @@ int	conversion_format(const char *format, va_list a_list, t_flags *flags)
 		i = ft_putchar(va_arg(a_list, int), flags);
 	else if (*format == 's')
 		i = ft_putstr(va_arg(a_list, char*), flags);
+	else if (*format == 'd' || *format == 'i')
+		i = ft_putnbr(va_arg(a_list, int), flags);
 	else
 		i = 0;
 	return (i);
@@ -48,15 +49,14 @@ int	get_flags(const char *format, t_flags *flags)
 	int	i;
 
 	i = 0;
-	while (!ft_strchr("cs", format[i]))
+	while (!ft_strchr("csdi", format[i]))
 	{
-		printf("\nc : %c\n", format[i]);
 		if (format[i] == '-')
 		{
 			flags->just_left = 1;
 			i++;
 		}
-		if (ft_atoi(&format[i]) >= 0)
+		if (ft_atoi(&format[i]) >= 0 && ft_isdigit(format[i]))
 		{
 			flags->width = ft_atoi(&format[i]);
 			i += num_len(flags->width);
@@ -95,9 +95,7 @@ int ft_printf(const char *format, ...)
 		if (format[i] == '%')
 		{
 			init_flags(flags);
-			printf("i : %d", i);
 			i += get_flags(&format[i + 1], flags);
-			printf("i : %d", i);
 			c += conversion_format(&format[i + 1], a_list, flags);
 			i++;
 		}else

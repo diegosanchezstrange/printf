@@ -1,33 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   printf.h                                           :+:      :+:    :+:   */
+/*   ft_printf_num.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dsanchez <dsanchez@student.42madrid>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/23 19:40:48 by dsanchez          #+#    #+#             */
-/*   Updated: 2021/09/28 20:08:26 by dsanchez         ###   ########.fr       */
+/*   Created: 2021/09/28 19:56:39 by dsanchez          #+#    #+#             */
+/*   Updated: 2021/09/28 20:14:49 by dsanchez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRINTF_H
-# define PRINTF_H
-# include "libft/libft.h"
-# include <string.h>
-# include <stdlib.h>
-# include <stdarg.h>
-# include <unistd.h>
+#include "ft_printf.h"
 
-typedef struct s_flags
+
+int	ft_putc(int c)
 {
-	int	width;
-	int	just_left;
-	int	prec;
-}					t_flags;
+	return (write(1, &c, 1));
+}
 
-int	ft_putchar(char c, t_flags *flags);
-int	ft_putstr(char *c, t_flags *flags);
-int	ft_putnbr(int nbr, t_flags *flags);
-int	ft_printf(const char *format, ...);
+int	ft_putnbr(int nbr, t_flags *flags)
+{
+	unsigned int	n;
+	int				c;
 
-#endif
+	c = 0;
+	if (nbr < 0)
+	{
+		c += write(1, "-", 1);
+		n = (unsigned int) nbr * -1;
+	}
+	else
+		n = (unsigned int) nbr;
+	if (n >= 10 )
+	{
+		c += ft_putnbr (n / 10, flags);
+		c += ft_putnbr (n % 10, flags);
+	}
+	else
+		c += ft_putc(n + '0');
+	return (c);
+}
